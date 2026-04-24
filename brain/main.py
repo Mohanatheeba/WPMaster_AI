@@ -29,8 +29,12 @@ async def call_wp_tool(tool: str, params: dict):
     auth = (WP_USERNAME, WP_APP_PASSWORD)
     payload = {"tool": tool, "params": params}
     logger.info(f"Calling WP Gateway Tool: {tool}")
+    headers = {
+        "ngrok-skip-browser-warning": "true",
+        "User-Agent": "WPMasterAI-Brain"
+    }
     try:
-        response = requests.post(url, json=payload, auth=auth, timeout=15)
+        response = requests.post(url, json=payload, auth=auth, headers=headers, timeout=15)
         logger.info(f"WP Response: {response.status_code}")
         return response.json()
     except Exception as e:

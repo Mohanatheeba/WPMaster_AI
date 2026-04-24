@@ -35,7 +35,14 @@ async def call_wp_tool(tool: str, params: dict):
     }
     try:
         response = requests.post(url, json=payload, auth=auth, headers=headers, timeout=30)
-        logger.info(f"WP Response: {response.status_code}")
+        logger.info(f"WP Response Code: {response.status_code}")
+        
+        if response.status_code == 401:
+            return {"error": "401 Unauthorized (Check your Username and App Password)"}
+        
+        if response.status_code != 200:
+            return {"error": f"HTTP {response.status_code}: {response.text[:100]}"}
+            
         return response.json()
     except Exception as e:
         logger.error(f"WP Connection Error: {e}")
@@ -51,14 +58,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     status_msg = await update.message.reply_text("🤖 Working on it...")
     
+    # 2. WP Gateway call
     wp_result = await call_wp_tool("manage_posts", {
         "action": "create",
         "title": "Draft: " + (user_msg[:20] + "..."),
         "content": f"<p>Request: {user_msg}</p>"
     })
     
-    if "error" in wp_result:
-        await status_msg.edit_text(f"❌ Error talking to WP: {wp_result['error']}")
+    logger.info(f"WP Result received: {wp_result}")
+    
+    if not wp_result or "error" in wp_result:
+        error_detail = wp_result.get("error", "Unknown Error") if wp_result else "No response from WP"
+        await status_msg.edit_text(f"❌ WP Error: {error_detail}\n\nHint: Check your WP_USERNAME and WP_APP_PASSWORD in Render!")
+        return
+
+    if "post_id" not in wp_result:
+        await status_msg.edit_text(f"❌ WP Response Missing ID: {wp_result}")
         return
 
     post_id = wp_result["post_id"]

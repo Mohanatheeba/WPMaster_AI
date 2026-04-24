@@ -34,7 +34,7 @@ async def call_wp_tool(tool: str, params: dict):
         "User-Agent": "WPMasterAI-Brain"
     }
     try:
-        response = requests.post(url, json=payload, auth=auth, headers=headers, timeout=15)
+        response = requests.post(url, json=payload, auth=auth, headers=headers, timeout=30)
         logger.info(f"WP Response: {response.status_code}")
         return response.json()
     except Exception as e:

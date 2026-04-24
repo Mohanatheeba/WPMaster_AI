@@ -128,6 +128,17 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data.startswith("discard_"):
         await query.edit_message_text(text="🗑️ Draft discarded.")
 
+@app.get("/")
+async def root():
+    return {
+        "message": "WPMaster AI Brain is Online",
+        "status": "active",
+        "endpoints": {
+            "health": "/health",
+            "webhook": "/webhook/telegram"
+        }
+    }
+
 @app.get("/health")
 async def health():
     return {"status": "brain_online"}

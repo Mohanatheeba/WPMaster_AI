@@ -47,7 +47,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     status_msg = await update.message.reply_text("🤖 Working on it...")
     
-    # Simple logic
     wp_result = await call_wp_tool("manage_posts", {
         "action": "create",
         "title": "Draft: " + (user_msg[:20] + "..."),
@@ -83,7 +82,6 @@ application.add_handler(CallbackQueryHandler(button_callback))
 
 @app.on_event("startup")
 async def startup_event():
-    # Crucial: Initialize the application on FastAPI startup
     await application.initialize()
     await application.start()
     logger.info("Telegram Application Initialized")
@@ -93,7 +91,8 @@ async def shutdown_event():
     await application.stop()
     await application.shutdown()
 
-@app.get("/")
+# Explicitly allow GET and HEAD to satisfy Render's health checks
+@app.api_route("/", methods=["GET", "HEAD"])
 async def root():
     return {"message": "WPMaster AI Brain is Online"}
 
@@ -108,3 +107,7 @@ async def telegram_webhook(request: Request):
     except Exception as e:
         logger.error(f"Webhook Error: {e}")
         return Response(status_code=500)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))

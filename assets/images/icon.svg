@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="claw" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e94560"/>
+      <stop offset="100%" style="stop-color:#ff6b6b"/>
+    </linearGradient>
+    <linearGradient id="wp" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#21759b"/>
+      <stop offset="100%" style="stop-color:#0073aa"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect x="0" y="0" width="256" height="256" rx="48" ry="48" fill="url(#bg)"/>
+
+  <!-- Claw mark - three diagonal slashes -->
+  <g transform="translate(128, 118) rotate(-15)">
+    <!-- Left claw -->
+    <path d="M-52,-60 Q-48,-20 -44,55" stroke="url(#claw)" stroke-width="14" stroke-linecap="round" fill="none"/>
+    <!-- Center claw -->
+    <path d="M-8,-68 Q-4,-20 0,55" stroke="url(#claw)" stroke-width="14" stroke-linecap="round" fill="none"/>
+    <!-- Right claw -->
+    <path d="M36,-60 Q40,-20 44,55" stroke="url(#claw)" stroke-width="14" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- WP circle badge -->
+  <circle cx="198" cy="200" r="36" fill="url(#wp)" stroke="#fff" stroke-width="3"/>
+  <text x="198" y="210" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="bold" fill="#fff" text-anchor="middle">W</text>
+
+  <!-- Subtle glow on claw marks -->
+  <g transform="translate(128, 118) rotate(-15)" opacity="0.3">
+    <path d="M-52,-60 Q-48,-20 -44,55" stroke="#ff6b6b" stroke-width="24" stroke-linecap="round" fill="none" filter="blur(8px)"/>
+    <path d="M-8,-68 Q-4,-20 0,55" stroke="#ff6b6b" stroke-width="24" stroke-linecap="round" fill="none" filter="blur(8px)"/>
+    <path d="M36,-60 Q40,-20 44,55" stroke="#ff6b6b" stroke-width="24" stroke-linecap="round" fill="none" filter="blur(8px)"/>
+  </g>
+</svg>

@@ -1,0 +1,661 @@
+# Copyright (C) 2026 Scott Crawford
+# This file is distributed under the same license as the ClawWP plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: ClawWP 1.0.0\n"
+"Report-Msgid-Bugs-To: https://hifriendbot.com/support\n"
+"POT-Creation-Date: 2026-02-17 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: ClawWP 1.0.0\n"
+"X-Domain: clawwp\n"
+
+#. Plugin Name of the plugin
+msgid "ClawWP"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://hifriendbot.com/clawwp"
+msgstr ""
+
+#. Description of the plugin
+msgid "Your WordPress AI Agent. Manage your site, content, and business from Telegram or the admin sidebar — powered by AI with persistent memory."
+msgstr ""
+
+#. Author of the plugin
+msgid "HiFriendbot"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://hifriendbot.com"
+msgstr ""
+
+#: includes/class-clawwp.php:206
+#: admin/class-clawwp-admin.php:53
+#: admin/class-clawwp-admin.php:54
+#: admin/views/dashboard.php:113
+#: admin/views/settings.php:42
+msgid "Settings"
+msgstr ""
+
+#: includes/class-clawwp-agent.php:67
+msgid "You've hit the rate limit. Please wait a moment and try again."
+msgstr ""
+
+#: includes/class-clawwp-license.php:69
+msgid "Please enter a license key."
+msgstr ""
+
+#: includes/class-clawwp-license.php:77
+msgid "Invalid license key format."
+msgstr ""
+
+#: includes/class-clawwp-license.php:111
+msgid "Pro license activated successfully!"
+msgstr ""
+
+#: includes/class-clawwp-license.php:119
+msgid "License validation failed."
+msgstr ""
+
+#: includes/class-clawwp-license.php:150
+msgid "License deactivated."
+msgstr ""
+
+#: includes/class-clawwp-license.php:273
+msgid "Could not connect to the license server. Please try again later."
+msgstr ""
+
+#: includes/class-clawwp-license.php:283
+msgid "License server returned an error."
+msgstr ""
+
+#: includes/class-clawwp-license.php:288
+msgid "Invalid response from license server."
+msgstr ""
+
+#: includes/class-clawwp-permissions.php:139
+msgid "Invalid pairing code format."
+msgstr ""
+
+#: includes/class-clawwp-permissions.php:146
+msgid "Invalid or expired pairing code."
+msgstr ""
+
+#: includes/class-clawwp-webhook-handler.php:124
+msgid "Something went wrong processing your message. Please try again."
+msgstr ""
+
+#: includes/class-clawwp-webhook-handler.php:267
+#, php-format
+msgid "Successfully paired with %s!"
+msgstr ""
+
+#: channels/class-clawwp-channel.php:64
+#, php-format
+msgid "Sorry, an error occurred: %s"
+msgstr ""
+
+#: channels/class-clawwp-channel-telegram.php:89
+msgid ""
+"Welcome to ClawWP! I'm the AI agent for your WordPress site.\n"
+"\n"
+"To get started, send /pair to get a pairing code, then enter it in your "
+"WordPress admin under ClawWP > Settings."
+msgstr ""
+
+#: channels/class-clawwp-channel-telegram.php:96
+msgid "Available commands:"
+msgstr ""
+
+#: channels/class-clawwp-channel-telegram.php:101
+msgid "Just type normally to talk to me about your WordPress site!"
+msgstr ""
+
+#: channels/class-clawwp-channel-telegram.php:108
+msgid "Starting a fresh conversation. How can I help?"
+msgstr ""
+
+#: channels/class-clawwp-channel-telegram.php:117
+msgid ""
+"I don't recognize this Telegram account. Please pair it first:\n"
+"\n"
+"1. Send /pair to get a code\n"
+"2. Enter the code in WordPress admin > ClawWP > Settings"
+msgstr ""
+
+#: channels/class-clawwp-channel-telegram.php:137
+#, php-format
+msgid "This Telegram account is already paired with WordPress user \"%s\". Send /pair again to generate a new code if you want to re-pair."
+msgstr ""
+
+#: channels/class-clawwp-channel-telegram.php:146
+#, php-format
+msgid ""
+"Your pairing code is: %s\n"
+"\n"
+"Enter this code in your WordPress admin:\n"
+"ClawWP > Settings > Pair a Channel\n"
+"\n"
+"This code expires in 5 minutes."
+msgstr ""
+
+#: admin/class-clawwp-admin.php:31
+#: admin/class-clawwp-admin.php:32
+#: admin/views/sidebar-chat.php:17
+#: admin/views/sidebar-chat.php:23
+msgid "ClawWP"
+msgstr ""
+
+#: admin/class-clawwp-admin.php:43
+#: admin/class-clawwp-admin.php:44
+#: admin/views/dashboard.php:16
+msgid "Dashboard"
+msgstr ""
+
+#: admin/class-clawwp-admin.php:63
+#: admin/class-clawwp-admin.php:64
+#: admin/views/logs.php:20
+msgid "Conversations"
+msgstr ""
+
+#: admin/class-clawwp-admin.php:73
+#: admin/class-clawwp-admin.php:74
+#: admin/views/costs.php:32
+msgid "Usage & Costs"
+msgstr ""
+
+#: admin/class-clawwp-admin.php:83
+#: admin/class-clawwp-admin.php:84
+#: admin/views/audit-log.php:35
+msgid "Audit Log"
+msgstr ""
+
+#: admin/class-clawwp-admin.php:194
+msgid "ClawWP needs an API key to work."
+msgstr ""
+
+#: admin/class-clawwp-admin.php:196
+msgid "Configure now"
+msgstr ""
+
+#: admin/views/dashboard.php:17
+msgid "Your WordPress AI Agent by HiFriendbot"
+msgstr ""
+
+#: admin/views/dashboard.php:25
+msgid "AI Provider"
+msgstr ""
+
+#: admin/views/dashboard.php:27
+#: admin/views/dashboard.php:43
+#: admin/views/settings.php:133
+#: admin/views/settings.php:173
+#: admin/views/settings.php:218
+#: admin/views/settings.php:246
+#: admin/views/settings.php:307
+msgid "Connected"
+msgstr ""
+
+#: admin/views/dashboard.php:35
+msgid "Not configured"
+msgstr ""
+
+#: admin/views/dashboard.php:36
+msgid "Add API key"
+msgstr ""
+
+#: admin/views/dashboard.php:41
+#: admin/views/settings.php:204
+msgid "Telegram"
+msgstr ""
+
+#: admin/views/dashboard.php:45
+msgid "Not connected"
+msgstr ""
+
+#: admin/views/dashboard.php:46
+msgid "Set up Telegram"
+msgstr ""
+
+#: admin/views/dashboard.php:51
+msgid "Paired Channels"
+msgstr ""
+
+#: admin/views/dashboard.php:56
+#: admin/views/costs.php:22
+msgid "This Month"
+msgstr ""
+
+#: admin/views/dashboard.php:60
+#, php-format
+msgid "%s requests &middot; %s tokens"
+msgstr ""
+
+#: admin/views/dashboard.php:70
+msgid "Recent Conversations"
+msgstr ""
+
+#: admin/views/dashboard.php:78
+#: admin/views/logs.php:33
+#: admin/views/audit-log.php:49
+#: admin/views/settings.php:366
+msgid "Channel"
+msgstr ""
+
+#: admin/views/dashboard.php:79
+#: admin/views/logs.php:34
+msgid "First Message"
+msgstr ""
+
+#: admin/views/dashboard.php:80
+#: admin/views/logs.php:35
+msgid "Messages"
+msgstr ""
+
+#: admin/views/dashboard.php:81
+#: admin/views/logs.php:37
+msgid "Last Active"
+msgstr ""
+
+#: admin/views/dashboard.php:97
+msgid "View all conversations"
+msgstr ""
+
+#: admin/views/dashboard.php:101
+#: admin/views/logs.php:58
+msgid "No conversations yet"
+msgstr ""
+
+#: admin/views/dashboard.php:102
+msgid "Start chatting with the sidebar on the right to begin!"
+msgstr ""
+
+#: admin/views/dashboard.php:110
+msgid "Quick Start"
+msgstr ""
+
+#: admin/views/dashboard.php:112
+#, php-format
+msgid "Get an API key from %s"
+msgstr ""
+
+#: admin/views/dashboard.php:113
+#, php-format
+msgid "Enter it in %s"
+msgstr ""
+
+#: admin/views/dashboard.php:114
+msgid "Open the chat sidebar on the right and say hello!"
+msgstr ""
+
+#: admin/views/dashboard.php:115
+msgid "(Optional) Connect Telegram to manage your site on the go"
+msgstr ""
+
+#: admin/views/settings.php:43
+msgid "Configure your AI agent, channels, and preferences"
+msgstr ""
+
+#: admin/views/settings.php:52
+msgid "Pro License"
+msgstr ""
+
+#: admin/views/settings.php:55
+msgid "License Key"
+msgstr ""
+
+#: admin/views/settings.php:63
+msgid "Active"
+msgstr ""
+
+#: admin/views/settings.php:71
+#, php-format
+msgid "Expires: %s"
+msgstr ""
+
+#: admin/views/settings.php:77
+msgid "Deactivate License"
+msgstr ""
+
+#: admin/views/settings.php:88
+msgid "Activate"
+msgstr ""
+
+#: admin/views/settings.php:93
+#, php-format
+msgid "Get a Pro license at %s to unlock WooCommerce tools, Slack/Discord, Cognitive Memory, and more."
+msgstr ""
+
+#: admin/views/settings.php:106
+msgid "AI Provider"
+msgstr ""
+
+#: admin/views/settings.php:110
+msgid "Provider"
+msgstr ""
+
+#: admin/views/settings.php:113
+msgid "Anthropic Claude"
+msgstr ""
+
+#: admin/views/settings.php:114
+msgid "OpenAI"
+msgstr ""
+
+#: admin/views/settings.php:116
+msgid "Choose your preferred AI provider. Claude is recommended for tool use."
+msgstr ""
+
+#: admin/views/settings.php:122
+msgid "Anthropic API Key"
+msgstr ""
+
+#: admin/views/settings.php:138
+#, php-format
+msgid "Get your API key from %s. Keys are stored encrypted."
+msgstr ""
+
+#: admin/views/settings.php:146
+msgid "Claude Model"
+msgstr ""
+
+#: admin/views/settings.php:156
+msgid "Sonnet 4.5 offers the best balance of speed, quality, and cost."
+msgstr ""
+
+#: admin/views/settings.php:162
+msgid "OpenAI API Key"
+msgstr ""
+
+#: admin/views/settings.php:178
+#, php-format
+msgid "Get your API key from %s. Only needed if using OpenAI as your provider."
+msgstr ""
+
+#: admin/views/settings.php:186
+msgid "OpenAI Model"
+msgstr ""
+
+#: admin/views/settings.php:207
+#: admin/views/settings.php:235
+#: admin/views/settings.php:296
+msgid "Bot Token"
+msgstr ""
+
+#: admin/views/settings.php:220
+#: admin/views/settings.php:248
+#: admin/views/settings.php:309
+msgid "Optional"
+msgstr ""
+
+#: admin/views/settings.php:223
+msgid "Create a bot with @BotFather on Telegram, then paste the token here."
+msgstr ""
+
+#: admin/views/settings.php:232
+msgid "Slack"
+msgstr ""
+
+#: admin/views/settings.php:253
+#, php-format
+msgid "Create a Slack app at %s, install it to your workspace, and paste the Bot User OAuth Token here."
+msgstr ""
+
+#: admin/views/settings.php:260
+msgid "Signing Secret"
+msgstr ""
+
+#: admin/views/settings.php:271
+msgid "Set"
+msgstr ""
+
+#: admin/views/settings.php:274
+msgid "Found under your Slack app's Basic Information > Signing Secret. Used to verify incoming webhooks."
+msgstr ""
+
+#: admin/views/settings.php:279
+msgid "Webhook URL"
+msgstr ""
+
+#: admin/views/settings.php:282
+msgid "Enter this URL in your Slack app's Event Subscriptions > Request URL."
+msgstr ""
+
+#: admin/views/settings.php:293
+msgid "Discord"
+msgstr ""
+
+#: admin/views/settings.php:314
+#, php-format
+msgid "Create a Discord application at %s, add a bot, and paste the token here."
+msgstr ""
+
+#: admin/views/settings.php:321
+msgid "Application ID"
+msgstr ""
+
+#: admin/views/settings.php:329
+msgid "Found on your Discord application's General Information page."
+msgstr ""
+
+#: admin/views/settings.php:333
+msgid "Public Key"
+msgstr ""
+
+#: admin/views/settings.php:341
+msgid "Found on your Discord application's General Information page. Used for webhook signature verification."
+msgstr ""
+
+#: admin/views/settings.php:346
+msgid "Interactions URL"
+msgstr ""
+
+#: admin/views/settings.php:349
+msgid "Enter this URL in your Discord application's General Information > Interactions Endpoint URL."
+msgstr ""
+
+#: admin/views/settings.php:359
+msgid "Channel Pairings"
+msgstr ""
+
+#: admin/views/settings.php:367
+msgid "User ID"
+msgstr ""
+
+#: admin/views/settings.php:368
+msgid "Paired"
+msgstr ""
+
+#: admin/views/settings.php:369
+msgid "Actions"
+msgstr ""
+
+#: admin/views/settings.php:382
+msgid "Unpair"
+msgstr ""
+
+#: admin/views/settings.php:394
+msgid "Pairing Code"
+msgstr ""
+
+#: admin/views/settings.php:405
+msgid "Pair"
+msgstr ""
+
+#: admin/views/settings.php:408
+msgid "Send /pair to your Telegram bot to get a code, then enter it here."
+msgstr ""
+
+#: admin/views/settings.php:417
+msgid "Budget & Limits"
+msgstr ""
+
+#: admin/views/settings.php:420
+msgid "Monthly Budget (USD)"
+msgstr ""
+
+#: admin/views/settings.php:429
+msgid "Set to 0 for no limit. You will receive alerts at 80% and 100% usage."
+msgstr ""
+
+#: admin/views/settings.php:437
+msgid "Interface"
+msgstr ""
+
+#: admin/views/settings.php:440
+msgid "Sidebar Chat"
+msgstr ""
+
+#: admin/views/settings.php:451
+msgid "Show chat sidebar on all admin pages"
+msgstr ""
+
+#: admin/views/settings.php:459
+msgid "Save Changes"
+msgstr ""
+
+#: admin/views/costs.php:20
+msgid "Today"
+msgstr ""
+
+#: admin/views/costs.php:21
+msgid "This Week"
+msgstr ""
+
+#: admin/views/costs.php:23
+msgid "All Time"
+msgstr ""
+
+#: admin/views/costs.php:33
+msgid "Track your AI token usage and estimated costs"
+msgstr ""
+
+#: admin/views/costs.php:51
+#: admin/views/costs.php:96
+msgid "Estimated Cost"
+msgstr ""
+
+#: admin/views/costs.php:59
+#, php-format
+msgid "%.0f%% of $%.2f budget"
+msgstr ""
+
+#: admin/views/costs.php:68
+#: admin/views/costs.php:93
+#: admin/views/costs.php:126
+msgid "Requests"
+msgstr ""
+
+#: admin/views/costs.php:73
+#: admin/views/costs.php:94
+msgid "Input Tokens"
+msgstr ""
+
+#: admin/views/costs.php:78
+#: admin/views/costs.php:95
+msgid "Output Tokens"
+msgstr ""
+
+#: admin/views/costs.php:86
+msgid "Usage by Model"
+msgstr ""
+
+#: admin/views/costs.php:92
+msgid "Model"
+msgstr ""
+
+#: admin/views/costs.php:119
+msgid "Daily Usage (Last 30 Days)"
+msgstr ""
+
+#: admin/views/costs.php:125
+msgid "Date"
+msgstr ""
+
+#: admin/views/costs.php:127
+msgid "Tokens"
+msgstr ""
+
+#: admin/views/costs.php:128
+msgid "Cost"
+msgstr ""
+
+#: admin/views/costs.php:150
+msgid "No usage data yet"
+msgstr ""
+
+#: admin/views/costs.php:151
+msgid "Start chatting with ClawWP to see your usage and costs here."
+msgstr ""
+
+#: admin/views/logs.php:21
+msgid "View your chat history across all channels"
+msgstr ""
+
+#: admin/views/logs.php:32
+msgid "ID"
+msgstr ""
+
+#: admin/views/logs.php:36
+msgid "Started"
+msgstr ""
+
+#: admin/views/logs.php:59
+msgid "Start chatting with ClawWP to see your conversation history here."
+msgstr ""
+
+#: admin/views/sidebar-chat.php:15
+msgid "Toggle ClawWP Chat"
+msgstr ""
+
+#: admin/views/sidebar-chat.php:25
+msgid "New conversation"
+msgstr ""
+
+#: admin/views/sidebar-chat.php:26
+msgid "Close"
+msgstr ""
+
+#: admin/views/sidebar-chat.php:34
+#, php-format
+msgid "Hi! I'm ClawWP, your AI agent for %s. How can I help?"
+msgstr ""
+
+#: admin/views/sidebar-chat.php:48
+msgid "Ask ClawWP anything about your site..."
+msgstr ""
+
+#: admin/views/audit-log.php:36
+msgid "Every action taken by ClawWP is logged here for security and accountability"
+msgstr ""
+
+#: admin/views/audit-log.php:47
+msgid "Time"
+msgstr ""
+
+#: admin/views/audit-log.php:48
+msgid "User"
+msgstr ""
+
+#: admin/views/audit-log.php:50
+msgid "Action"
+msgstr ""
+
+#: admin/views/audit-log.php:51
+msgid "Details"
+msgstr ""
+
+#: admin/views/audit-log.php:104
+msgid "No audit events yet"
+msgstr ""
+
+#: admin/views/audit-log.php:105
+msgid "Actions will be logged here as ClawWP processes requests."
+msgstr ""

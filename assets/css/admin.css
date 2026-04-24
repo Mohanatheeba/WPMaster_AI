@@ -1,0 +1,945 @@
+/* ==========================================================================
+   ClawWP Admin — Dark Theme
+   Premium dark UI for all ClawWP admin pages.
+   ========================================================================== */
+
+/* --- Custom Properties --- */
+.clawwp-wrap {
+    --cwp-bg: #0d1117;
+    --cwp-bg-raised: #161b22;
+    --cwp-bg-overlay: #1c2128;
+    --cwp-bg-hover: #252b33;
+    --cwp-border: #30363d;
+    --cwp-border-muted: #21262d;
+    --cwp-text: #e6edf3;
+    --cwp-text-secondary: #8b949e;
+    --cwp-text-muted: #484f58;
+    --cwp-accent: #e74c3c;
+    --cwp-accent-hover: #c0392b;
+    --cwp-accent-subtle: rgba(231, 76, 60, 0.15);
+    --cwp-success: #3fb950;
+    --cwp-success-subtle: rgba(63, 185, 80, 0.15);
+    --cwp-warning: #d29922;
+    --cwp-warning-subtle: rgba(210, 153, 34, 0.15);
+    --cwp-danger: #f85149;
+    --cwp-danger-subtle: rgba(248, 81, 73, 0.15);
+    --cwp-info: #58a6ff;
+    --cwp-info-subtle: rgba(88, 166, 255, 0.15);
+    --cwp-radius: 8px;
+    --cwp-radius-sm: 6px;
+    --cwp-radius-lg: 12px;
+    --cwp-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --cwp-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --cwp-transition: 0.2s ease;
+}
+
+/* --- Base Wrapper --- */
+.clawwp-wrap {
+    margin: -1px -1px -1px 0;
+    padding: 0;
+    min-height: calc(100vh - 32px);
+    background: var(--cwp-bg);
+    color: var(--cwp-text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.clawwp-wrap *,
+.clawwp-wrap *::before,
+.clawwp-wrap *::after {
+    box-sizing: border-box;
+}
+
+.clawwp-wrap a {
+    color: var(--cwp-info);
+    text-decoration: none;
+    transition: color var(--cwp-transition);
+}
+
+.clawwp-wrap a:hover {
+    color: var(--cwp-text);
+}
+
+/* --- Page Header --- */
+.clawwp-page-header {
+    position: relative;
+    background: linear-gradient(135deg, var(--cwp-bg-overlay) 0%, var(--cwp-bg) 100%);
+    border-bottom: 1px solid var(--cwp-border);
+    padding: 28px 40px 24px;
+    overflow: hidden;
+}
+
+.clawwp-page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cwp-accent) 0%, var(--cwp-accent-hover) 40%, transparent 70%);
+}
+
+/* Decorative claw scratch marks */
+.clawwp-page-header::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: 40px;
+    width: 120px;
+    height: 120px;
+    opacity: 0.04;
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--cwp-accent),
+        var(--cwp-accent) 3px,
+        transparent 3px,
+        transparent 16px
+    );
+    border-radius: 8px;
+    transform: rotate(15deg);
+}
+
+.clawwp-page-header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.clawwp-page-header-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.clawwp-page-header-brand {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cwp-accent);
+}
+
+.clawwp-page-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cwp-text);
+    margin: 0;
+    padding: 0;
+    line-height: 1.3;
+}
+
+.clawwp-page-header p {
+    color: var(--cwp-text-secondary);
+    margin: 4px 0 0;
+    font-size: 14px;
+}
+
+/* --- Page Content --- */
+.clawwp-page-content {
+    padding: 30px 40px 40px;
+    max-width: 1400px;
+}
+
+/* --- Section --- */
+.clawwp-section {
+    margin-bottom: 32px;
+}
+
+.clawwp-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cwp-text);
+    margin: 0 0 16px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clawwp-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--cwp-border-muted);
+    margin-left: 8px;
+}
+
+/* --- Cards Grid --- */
+.clawwp-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.clawwp-card {
+    background: var(--cwp-bg-raised);
+    border: 1px solid var(--cwp-border);
+    border-radius: var(--cwp-radius);
+    padding: 20px 24px;
+    transition: border-color var(--cwp-transition), box-shadow var(--cwp-transition);
+}
+
+.clawwp-card:hover {
+    border-color: var(--cwp-text-muted);
+    box-shadow: var(--cwp-shadow);
+}
+
+.clawwp-card-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--cwp-text-secondary);
+    margin-bottom: 10px;
+}
+
+.clawwp-card-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--cwp-text);
+    line-height: 1.2;
+}
+
+.clawwp-card-detail {
+    font-size: 13px;
+    color: var(--cwp-text-secondary);
+    margin-top: 6px;
+}
+
+.clawwp-card-value--accent {
+    color: var(--cwp-accent);
+}
+
+/* --- Status Indicators --- */
+.clawwp-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.clawwp-status::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.clawwp-status--ok {
+    color: var(--cwp-success);
+}
+
+.clawwp-status--ok::before {
+    background: var(--cwp-success);
+    box-shadow: 0 0 6px var(--cwp-success);
+}
+
+.clawwp-status--warn {
+    color: var(--cwp-warning);
+}
+
+.clawwp-status--warn::before {
+    background: var(--cwp-warning);
+    box-shadow: 0 0 6px var(--cwp-warning);
+}
+
+.clawwp-status--error {
+    color: var(--cwp-danger);
+}
+
+.clawwp-status--error::before {
+    background: var(--cwp-danger);
+    box-shadow: 0 0 6px var(--cwp-danger);
+}
+
+.clawwp-status--info {
+    color: var(--cwp-info);
+}
+
+.clawwp-status--info::before {
+    background: var(--cwp-info);
+    box-shadow: 0 0 6px var(--cwp-info);
+}
+
+/* --- Badges --- */
+.clawwp-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.clawwp-badge--channel {
+    background: var(--cwp-info-subtle);
+    color: var(--cwp-info);
+}
+
+.clawwp-badge--action {
+    background: var(--cwp-accent-subtle);
+    color: var(--cwp-accent);
+}
+
+.clawwp-badge--success {
+    background: var(--cwp-success-subtle);
+    color: var(--cwp-success);
+}
+
+.clawwp-badge--warning {
+    background: var(--cwp-warning-subtle);
+    color: var(--cwp-warning);
+}
+
+/* --- Tables --- */
+.clawwp-table-wrap {
+    border: 1px solid var(--cwp-border);
+    border-radius: var(--cwp-radius);
+    overflow: hidden;
+}
+
+.clawwp-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--cwp-bg-raised);
+}
+
+.clawwp-table thead th {
+    background: var(--cwp-bg-overlay);
+    color: var(--cwp-text-secondary);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--cwp-border);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.clawwp-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--cwp-border-muted);
+    color: var(--cwp-text);
+    font-size: 13px;
+}
+
+.clawwp-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.clawwp-table tbody tr {
+    transition: background var(--cwp-transition);
+}
+
+.clawwp-table tbody tr:hover {
+    background: var(--cwp-bg-overlay);
+}
+
+.clawwp-table code {
+    background: var(--cwp-bg);
+    border: 1px solid var(--cwp-border-muted);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--cwp-accent);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.clawwp-table .clawwp-text-muted {
+    color: var(--cwp-text-secondary);
+    font-size: 12px;
+}
+
+/* --- Navigation Tabs --- */
+.clawwp-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--cwp-border);
+    padding-bottom: 0;
+}
+
+.clawwp-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--cwp-text-secondary);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all var(--cwp-transition);
+}
+
+.clawwp-tab:hover {
+    color: var(--cwp-text);
+}
+
+.clawwp-tab--active,
+.clawwp-tab--active:hover {
+    color: var(--cwp-accent);
+    border-bottom-color: var(--cwp-accent);
+}
+
+/* --- Forms --- */
+.clawwp-form-card {
+    background: var(--cwp-bg-raised);
+    border: 1px solid var(--cwp-border);
+    border-radius: var(--cwp-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.clawwp-form-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--cwp-border-muted);
+}
+
+.clawwp-form-row:first-child {
+    padding-top: 0;
+}
+
+.clawwp-form-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.clawwp-form-label {
+    width: 200px;
+    flex-shrink: 0;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--cwp-text);
+    padding-top: 8px;
+}
+
+.clawwp-form-field {
+    flex: 1;
+    min-width: 0;
+}
+
+.clawwp-form-field-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.clawwp-input,
+.clawwp-wrap input[type="text"],
+.clawwp-wrap input[type="password"],
+.clawwp-wrap input[type="number"],
+.clawwp-wrap input[type="email"],
+.clawwp-wrap input[type="url"] {
+    background: var(--cwp-bg) !important;
+    border: 1px solid var(--cwp-border) !important;
+    color: var(--cwp-text) !important;
+    padding: 8px 12px !important;
+    border-radius: var(--cwp-radius-sm) !important;
+    font-size: 14px !important;
+    font-family: inherit !important;
+    transition: border-color var(--cwp-transition), box-shadow var(--cwp-transition) !important;
+    width: 100%;
+    max-width: 400px;
+    height: auto !important;
+    line-height: 1.5 !important;
+}
+
+.clawwp-input:focus,
+.clawwp-wrap input[type="text"]:focus,
+.clawwp-wrap input[type="password"]:focus,
+.clawwp-wrap input[type="number"]:focus {
+    border-color: var(--cwp-accent) !important;
+    box-shadow: 0 0 0 3px var(--cwp-accent-subtle) !important;
+    outline: none !important;
+}
+
+.clawwp-input--small,
+.clawwp-wrap input.small-text {
+    max-width: 120px !important;
+}
+
+.clawwp-select,
+.clawwp-wrap select {
+    background: var(--cwp-bg) !important;
+    border: 1px solid var(--cwp-border) !important;
+    color: var(--cwp-text) !important;
+    padding: 8px 36px 8px 12px !important;
+    border-radius: var(--cwp-radius-sm) !important;
+    font-size: 14px !important;
+    font-family: inherit !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b949e' d='M6 8.5L1 3.5h10z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    cursor: pointer;
+    max-width: 400px;
+    width: 100%;
+    line-height: 1.5 !important;
+    height: auto !important;
+}
+
+.clawwp-select:focus,
+.clawwp-wrap select:focus {
+    border-color: var(--cwp-accent) !important;
+    box-shadow: 0 0 0 3px var(--cwp-accent-subtle) !important;
+    outline: none !important;
+}
+
+.clawwp-select option,
+.clawwp-wrap select option {
+    background: var(--cwp-bg-raised);
+    color: var(--cwp-text);
+}
+
+.clawwp-form-help {
+    font-size: 12px;
+    color: var(--cwp-text-secondary);
+    margin: 6px 0 0;
+    line-height: 1.5;
+}
+
+.clawwp-form-help a {
+    color: var(--cwp-info);
+}
+
+/* Checkbox / Toggle */
+.clawwp-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.clawwp-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.clawwp-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.clawwp-toggle-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--cwp-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background var(--cwp-transition);
+}
+
+.clawwp-toggle-track::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: var(--cwp-text-secondary);
+    border-radius: 50%;
+    transition: transform var(--cwp-transition), background var(--cwp-transition);
+}
+
+.clawwp-toggle input:checked + .clawwp-toggle-track {
+    background: var(--cwp-accent);
+}
+
+.clawwp-toggle input:checked + .clawwp-toggle-track::after {
+    transform: translateX(20px);
+    background: #fff;
+}
+
+.clawwp-toggle-label {
+    font-size: 14px;
+    color: var(--cwp-text);
+    cursor: pointer;
+}
+
+/* --- Buttons --- */
+.clawwp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: var(--cwp-radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--cwp-transition);
+    text-decoration: none;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.clawwp-btn:hover {
+    text-decoration: none;
+}
+
+.clawwp-btn-primary,
+.clawwp-wrap .button-primary,
+.clawwp-wrap #submit {
+    background: var(--cwp-accent) !important;
+    color: #fff !important;
+    border-color: var(--cwp-accent) !important;
+    border-radius: var(--cwp-radius-sm) !important;
+    font-size: 14px !important;
+    padding: 9px 24px !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.clawwp-btn-primary:hover,
+.clawwp-wrap .button-primary:hover,
+.clawwp-wrap #submit:hover {
+    background: var(--cwp-accent-hover) !important;
+    border-color: var(--cwp-accent-hover) !important;
+    color: #fff !important;
+}
+
+.clawwp-btn-secondary,
+.clawwp-wrap .button-secondary,
+.clawwp-wrap .button {
+    background: transparent !important;
+    color: var(--cwp-text) !important;
+    border: 1px solid var(--cwp-border) !important;
+    border-radius: var(--cwp-radius-sm) !important;
+    font-size: 13px !important;
+    padding: 7px 16px !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.clawwp-btn-secondary:hover,
+.clawwp-wrap .button-secondary:hover,
+.clawwp-wrap .button:hover {
+    background: var(--cwp-bg-overlay) !important;
+    border-color: var(--cwp-text-muted) !important;
+    color: var(--cwp-text) !important;
+}
+
+.clawwp-btn-danger {
+    background: transparent;
+    color: var(--cwp-danger);
+    border-color: var(--cwp-border);
+}
+
+.clawwp-btn-danger:hover {
+    background: var(--cwp-danger-subtle);
+    border-color: var(--cwp-danger);
+    color: var(--cwp-danger);
+}
+
+.clawwp-btn-sm {
+    padding: 5px 12px;
+    font-size: 12px;
+}
+
+/* --- Progress Bar --- */
+.clawwp-progress {
+    height: 8px;
+    background: var(--cwp-border-muted);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.clawwp-progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.clawwp-progress-bar--ok {
+    background: linear-gradient(90deg, var(--cwp-success), #2ea043);
+}
+
+.clawwp-progress-bar--warn {
+    background: linear-gradient(90deg, var(--cwp-warning), #e3b341);
+}
+
+.clawwp-progress-bar--danger {
+    background: linear-gradient(90deg, var(--cwp-danger), #da3633);
+}
+
+/* --- Empty State --- */
+.clawwp-empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--cwp-text-secondary);
+    background: var(--cwp-bg-raised);
+    border: 1px dashed var(--cwp-border);
+    border-radius: var(--cwp-radius);
+}
+
+.clawwp-empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+}
+
+.clawwp-empty h3 {
+    color: var(--cwp-text);
+    font-size: 16px;
+    margin: 0 0 8px;
+}
+
+.clawwp-empty p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* --- Quick Start / Info Box --- */
+.clawwp-info-box {
+    background: var(--cwp-bg-raised);
+    border: 1px solid var(--cwp-accent);
+    border-left: 4px solid var(--cwp-accent);
+    border-radius: var(--cwp-radius);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+}
+
+.clawwp-info-box h3 {
+    color: var(--cwp-accent);
+    margin: 0 0 12px;
+    font-size: 16px;
+}
+
+.clawwp-info-box ol,
+.clawwp-info-box ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.clawwp-info-box li {
+    margin-bottom: 8px;
+    color: var(--cwp-text-secondary);
+    line-height: 1.6;
+}
+
+.clawwp-info-box a {
+    color: var(--cwp-accent);
+    font-weight: 500;
+}
+
+/* --- Pagination --- */
+.clawwp-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 24px;
+    padding: 16px 0;
+}
+
+.clawwp-pagination a,
+.clawwp-pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: var(--cwp-radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all var(--cwp-transition);
+    border: 1px solid var(--cwp-border);
+    color: var(--cwp-text-secondary);
+    background: var(--cwp-bg-raised);
+}
+
+.clawwp-pagination a:hover {
+    background: var(--cwp-bg-overlay);
+    color: var(--cwp-text);
+    border-color: var(--cwp-text-muted);
+}
+
+.clawwp-pagination .current {
+    background: var(--cwp-accent);
+    color: #fff;
+    border-color: var(--cwp-accent);
+}
+
+/* --- WP Overrides inside ClawWP pages --- */
+.clawwp-wrap h2 {
+    color: var(--cwp-text);
+    font-size: 16px;
+    padding: 0;
+}
+
+.clawwp-wrap .description {
+    color: var(--cwp-text-secondary);
+}
+
+.clawwp-wrap .notice {
+    background: var(--cwp-bg-raised);
+    border-color: var(--cwp-border);
+    color: var(--cwp-text);
+    box-shadow: none;
+}
+
+/* Hide default WP submit wrapper padding */
+.clawwp-wrap .submit {
+    padding-top: 16px;
+    padding-bottom: 0;
+    border: none;
+}
+
+/* --- Pair Result Messages --- */
+.clawwp-pair-result {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: var(--cwp-radius-sm);
+    font-size: 13px;
+    display: none;
+}
+
+.clawwp-pair-result--success {
+    display: block;
+    background: var(--cwp-success-subtle);
+    color: var(--cwp-success);
+    border: 1px solid rgba(63, 185, 80, 0.3);
+}
+
+.clawwp-pair-result--error {
+    display: block;
+    background: var(--cwp-danger-subtle);
+    color: var(--cwp-danger);
+    border: 1px solid rgba(248, 81, 73, 0.3);
+}
+
+/* --- Scrollbar Styling --- */
+.clawwp-wrap ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.clawwp-wrap ::-webkit-scrollbar-track {
+    background: var(--cwp-bg);
+}
+
+.clawwp-wrap ::-webkit-scrollbar-thumb {
+    background: var(--cwp-border);
+    border-radius: 4px;
+}
+
+.clawwp-wrap ::-webkit-scrollbar-thumb:hover {
+    background: var(--cwp-text-muted);
+}
+
+/* --- Responsive Table Wrapper --- */
+.clawwp-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+    .clawwp-page-header {
+        padding: 24px 24px 20px;
+    }
+    .clawwp-page-content {
+        padding: 24px;
+    }
+    .clawwp-cards {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 782px) {
+    .clawwp-wrap {
+        margin: 0 -10px;
+    }
+    .clawwp-page-header {
+        padding: 20px 16px;
+    }
+    .clawwp-page-header h1 {
+        font-size: 22px;
+    }
+    .clawwp-page-content {
+        padding: 20px 16px;
+    }
+    .clawwp-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .clawwp-card {
+        padding: 16px;
+    }
+    .clawwp-card-value {
+        font-size: 24px;
+    }
+    .clawwp-form-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .clawwp-form-label {
+        width: auto;
+        padding-top: 0;
+    }
+    .clawwp-input,
+    .clawwp-select,
+    .clawwp-wrap input[type="text"],
+    .clawwp-wrap input[type="password"],
+    .clawwp-wrap input[type="number"],
+    .clawwp-wrap select {
+        max-width: 100% !important;
+    }
+    .clawwp-table-wrap {
+        border-radius: var(--cwp-radius-sm);
+    }
+    .clawwp-section-title::after {
+        display: none;
+    }
+    .clawwp-form-card {
+        padding: 16px;
+    }
+    .clawwp-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+    }
+    .clawwp-tab {
+        padding: 8px 14px;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .clawwp-cards {
+        grid-template-columns: 1fr;
+    }
+    .clawwp-page-header::after {
+        display: none;
+    }
+}

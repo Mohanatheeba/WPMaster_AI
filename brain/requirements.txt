@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+requests
+python-telegram-bot
+python-dotenv
+python-multipart
+playwright

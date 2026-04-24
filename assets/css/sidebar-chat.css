@@ -1,0 +1,379 @@
+/**
+ * ClawWP Sidebar Chat — Dark Theme
+ */
+
+.clawwp-sidebar {
+    position: fixed;
+    top: 32px;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    transition: width 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+    background: #0d1117;
+    color-scheme: dark;
+}
+
+/* Reset WordPress admin styles that bleed into the sidebar */
+.clawwp-sidebar *,
+.clawwp-sidebar *::before,
+.clawwp-sidebar *::after {
+    box-sizing: border-box;
+}
+
+.clawwp-sidebar h3,
+.clawwp-sidebar p,
+.clawwp-sidebar div,
+.clawwp-sidebar span,
+.clawwp-sidebar form {
+    background-color: transparent;
+    color: inherit;
+}
+
+.clawwp-sidebar--collapsed {
+    width: 48px;
+    background: transparent;
+}
+
+.clawwp-sidebar--expanded {
+    width: 380px;
+}
+
+/* --- Toggle Button --- */
+.clawwp-sidebar-toggle {
+    position: absolute;
+    top: 12px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #30363d;
+    border-radius: 50%;
+    background: #161b22;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    padding: 0;
+    overflow: hidden;
+}
+
+.clawwp-sidebar-toggle:hover {
+    background: #1c2128;
+    border-color: #e74c3c;
+    box-shadow: 0 2px 12px rgba(231, 76, 60, 0.2);
+    transform: scale(1.05);
+}
+
+.clawwp-sidebar-toggle-icon {
+    font-size: 18px;
+    line-height: 1;
+    filter: none;
+}
+
+.clawwp-sidebar-toggle-label {
+    display: none;
+}
+
+.clawwp-sidebar--expanded .clawwp-sidebar-toggle {
+    display: none;
+}
+
+/* --- Chat Panel --- */
+.clawwp-sidebar-panel {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    background: #0d1117;
+    border-left: 1px solid #30363d;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.3);
+}
+
+.clawwp-sidebar--expanded .clawwp-sidebar-panel {
+    display: flex;
+}
+
+/* --- Header --- */
+.clawwp-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid #21262d;
+    background: #161b22;
+    flex-shrink: 0;
+}
+
+.clawwp-sidebar-header h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #e6edf3;
+    letter-spacing: 0.02em;
+}
+
+.clawwp-sidebar-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.clawwp-btn-icon,
+.clawwp-sidebar .clawwp-btn-icon {
+    width: 30px;
+    height: 30px;
+    border: none !important;
+    background: transparent !important;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #8b949e !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.15s;
+    min-height: 0;
+    line-height: 1;
+}
+
+.clawwp-btn-icon:hover,
+.clawwp-sidebar .clawwp-btn-icon:hover,
+.clawwp-btn-icon:focus {
+    background: #21262d !important;
+    color: #e6edf3 !important;
+    outline: none;
+    box-shadow: none;
+}
+
+/* --- Messages Area --- */
+.clawwp-sidebar-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #0d1117;
+}
+
+.clawwp-sidebar-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.clawwp-sidebar-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.clawwp-sidebar-messages::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 3px;
+}
+
+.clawwp-message {
+    max-width: 88%;
+    animation: clawwp-fadeIn 0.25s ease;
+}
+
+.clawwp-message--user {
+    align-self: flex-end;
+}
+
+.clawwp-message--assistant {
+    align-self: flex-start;
+}
+
+.clawwp-message-content {
+    padding: 10px 14px;
+    border-radius: 12px;
+    line-height: 1.55;
+    word-wrap: break-word;
+    font-size: 13px;
+}
+
+.clawwp-message--user .clawwp-message-content {
+    background: #e74c3c;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+.clawwp-message--assistant .clawwp-message-content {
+    background: #161b22;
+    color: #e6edf3;
+    border: 1px solid #21262d;
+    border-bottom-left-radius: 4px;
+}
+
+.clawwp-message-content code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.clawwp-message--assistant .clawwp-message-content code {
+    background: #0d1117;
+    border: 1px solid #30363d;
+}
+
+.clawwp-message-content strong {
+    font-weight: 600;
+    color: inherit;
+}
+
+/* --- Tool Call Indicator --- */
+.clawwp-tool-call {
+    font-size: 11px;
+    color: #8b949e;
+    padding: 6px 10px;
+    margin: 2px 0;
+    border-left: 2px solid #e74c3c;
+    background: rgba(231, 76, 60, 0.06);
+    border-radius: 0 4px 4px 0;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+/* --- Typing Indicator --- */
+.clawwp-typing {
+    padding: 8px 16px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.clawwp-typing span {
+    width: 6px;
+    height: 6px;
+    background: #484f58;
+    border-radius: 50%;
+    animation: clawwp-bounce 1.4s ease-in-out infinite;
+}
+
+.clawwp-typing span:nth-child(2) { animation-delay: 0.2s; }
+.clawwp-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+/* --- Input Area --- */
+.clawwp-sidebar-input {
+    display: flex;
+    align-items: flex-end;
+    padding: 12px;
+    border-top: 1px solid #21262d;
+    gap: 8px;
+    flex-shrink: 0;
+    background: #161b22;
+}
+
+.clawwp-sidebar-input textarea,
+.clawwp-sidebar-input textarea:focus {
+    flex: 1;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: none;
+    max-height: 120px;
+    line-height: 1.4;
+    outline: none;
+    background: #0d1117 !important;
+    color: #e6edf3 !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: none;
+}
+
+.clawwp-sidebar-input textarea::placeholder {
+    color: #484f58;
+}
+
+.clawwp-sidebar-input textarea:focus,
+.clawwp-sidebar .clawwp-sidebar-input textarea:focus {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.15) !important;
+}
+
+.clawwp-btn-send,
+.clawwp-sidebar .clawwp-btn-send {
+    width: 36px;
+    height: 36px;
+    border: none !important;
+    background: #e74c3c !important;
+    color: #fff !important;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    min-height: 0;
+    line-height: 1;
+}
+
+.clawwp-btn-send:hover,
+.clawwp-sidebar .clawwp-btn-send:hover {
+    background: #c0392b !important;
+    transform: scale(1.05);
+}
+
+.clawwp-btn-send:disabled,
+.clawwp-sidebar .clawwp-btn-send:disabled {
+    background: #30363d !important;
+    color: #484f58 !important;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --- Footer --- */
+.clawwp-sidebar-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: #484f58;
+    border-top: 1px solid #21262d;
+    flex-shrink: 0;
+    background: #161b22;
+}
+
+.clawwp-token-count {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 10px;
+}
+
+.clawwp-branding {
+    color: #484f58;
+    text-decoration: none;
+    font-size: 10px;
+    transition: color 0.2s;
+}
+
+.clawwp-branding:hover {
+    color: #e74c3c;
+}
+
+/* --- Animations --- */
+@keyframes clawwp-fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes clawwp-bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 782px) {
+    .clawwp-sidebar {
+        top: 46px;
+    }
+    .clawwp-sidebar--expanded {
+        width: 100%;
+    }
+}

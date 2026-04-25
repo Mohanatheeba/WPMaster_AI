@@ -125,14 +125,17 @@ async def run_agent_loop(user_msg: str, chat_history: list):
 
     try:
         # Step 1: Initial call to AI
-        resp_obj = requests.post(url, json={
-            "model": "gpt-4o",
-            "messages": messages,
-            "tools": TOOLS_SCHEMA,
-            "tool_choice": "auto"
-        }, headers=headers, timeout=60)
+        import asyncio
+        loop = asyncio.get_event_loop()
         
-        response = resp_obj.json()
+        def call_openai(msgs, tools=None):
+            payload = {"model": "gpt-4o", "messages": msgs}
+            if tools:
+                payload["tools"] = tools
+                payload["tool_choice"] = "auto"
+            return requests.post(url, json=payload, headers=headers, timeout=60).json()
+
+        response = await loop.run_in_executor(None, call_openai, messages, TOOLS_SCHEMA)
         
         if "error" in response:
             return f"❌ OpenAI Error: {response['error']['message']}"
@@ -161,11 +164,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
                 })
 
             # Step 3: Final response from AI
-            final_response = requests.post(url, json={
-                "model": "gpt-4o",
-                "messages": messages
-            }, headers=headers, timeout=60).json()
-            
+            final_response = await loop.run_in_executor(None, call_openai, messages)
             return final_response['choices'][0]['message']['content']
         
         return message["content"]

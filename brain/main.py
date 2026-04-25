@@ -52,17 +52,51 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.info("Start command received")
     await update.message.reply_text("👋 WPMaster AI is connected and listening!")
 
+async def generate_ai_content(prompt: str):
+    """Call OpenAI to generate a professional blog post."""
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        return {
+            "title": "Draft: " + (prompt[:20] + "..."),
+            "content": f"<p>AI Key Missing! Please add OPENAI_API_KEY to Render.</p><p>Request: {prompt}</p>"
+        }
+    
+    try:
+        # Use simple requests for OpenAI to avoid adding more libs for now
+        url = "https://api.openai.com/v1/chat/completions"
+        headers = {"Authorization": f"Bearer {api_key}"}
+        payload = {
+            "model": "gpt-4o",
+            "messages": [
+                {"role": "system", "content": "You are a professional WordPress content creator. Generate a blog post title and HTML content based on the user's request. Return it as a JSON object with 'title' and 'content' keys."},
+                {"role": "user", "content": prompt}
+            ],
+            "response_format": { "type": "json_object" }
+        }
+        
+        response = requests.post(url, json=payload, headers=headers, timeout=60)
+        result = response.json()
+        import json
+        ai_data = json.loads(result['choices'][0]['message']['content'])
+        return ai_data
+    except Exception as e:
+        logger.error(f"AI Generation Error: {e}")
+        return {"title": "Error Generating Content", "content": f"<p>Error: {str(e)}</p>"}
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_msg = update.message.text
     logger.info(f"Message received: {user_msg}")
     
-    status_msg = await update.message.reply_text("🤖 Working on it...")
+    status_msg = await update.message.reply_text("🤖 WPMaster AI is thinking and writing...")
+    
+    # 1. Generate AI Content
+    ai_content = await generate_ai_content(user_msg)
     
     # 2. WP Gateway call
     wp_result = await call_wp_tool("manage_posts", {
         "action": "create",
-        "title": "Draft: " + (user_msg[:20] + "..."),
-        "content": f"<p>Request: {user_msg}</p>"
+        "title": ai_content.get("title", "Untitled AI Post"),
+        "content": ai_content.get("content", "")
     })
     
     logger.info(f"WP Result received: {wp_result}")

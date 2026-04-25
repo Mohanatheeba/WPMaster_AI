@@ -56,9 +56,10 @@ spl_autoload_register( function ( $class ) {
 
     $directories = array(
         CLAWWP_PLUGIN_DIR . 'includes/',
-        CLAWWP_PLUGIN_DIR . 'channels/',
         CLAWWP_PLUGIN_DIR . 'tools/',
+        CLAWWP_PLUGIN_DIR . 'channels/',
         CLAWWP_PLUGIN_DIR . 'admin/',
+        CLAWWP_PLUGIN_DIR . 'includes/ai/',
     );
 
     foreach ( $directories as $directory ) {
@@ -116,8 +117,8 @@ function clawwp_create_tables() {
         conversation_id BIGINT UNSIGNED NOT NULL,
         role ENUM('user', 'assistant', 'system', 'tool') NOT NULL,
         content LONGTEXT NOT NULL,
-        tool_calls JSON DEFAULT NULL,
-        tool_results JSON DEFAULT NULL,
+        tool_calls LONGTEXT DEFAULT NULL,
+        tool_results LONGTEXT DEFAULT NULL,
         tokens_in INT UNSIGNED DEFAULT 0,
         tokens_out INT UNSIGNED DEFAULT 0,
         model VARCHAR(64) DEFAULT NULL,
@@ -153,7 +154,7 @@ function clawwp_create_tables() {
         user_id BIGINT UNSIGNED NOT NULL,
         channel VARCHAR(32) NOT NULL DEFAULT 'system',
         action VARCHAR(128) NOT NULL,
-        details JSON DEFAULT NULL,
+        details LONGTEXT DEFAULT NULL,
         created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         INDEX idx_user_date (user_id, created_at)
     ) $charset_collate;";

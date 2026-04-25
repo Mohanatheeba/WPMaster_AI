@@ -76,12 +76,14 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await status_msg.edit_text(f"❌ WP Response Missing ID: {wp_result}")
         return
 
-    post_id = wp_result["post_id"]
+    # 3. Send success message with public preview link
+    public_url = wp_result.get("url", "").replace("http://wpmastertest.local", os.getenv("WP_URL").replace("/wp-json/clawwp/v1", ""))
+    
     keyboard = [[InlineKeyboardButton("🚀 Publish", callback_data=f"publish_{post_id}")]]
     
     await status_msg.delete()
     await update.message.reply_text(
-        f"✅ **Draft Created!** (ID: {post_id})\nPreview: {wp_result.get('url')}",
+        f"✅ **Draft Created!** (ID: {post_id})\n🔗 **Preview:** {public_url}",
         reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode="Markdown"
     )

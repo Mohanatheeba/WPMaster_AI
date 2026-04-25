@@ -165,6 +165,13 @@ async def run_agent_loop(user_msg: str, chat_history: list):
 
             # Step 3: Final response from AI
             final_response = await loop.run_in_executor(None, call_openai, messages)
+            
+            if "error" in final_response:
+                return f"❌ OpenAI Final Error: {final_response['error']['message']}"
+                
+            if "choices" not in final_response:
+                return f"❌ OpenAI Final Unexpected Response: {final_response}"
+                
             return final_response['choices'][0]['message']['content']
         
         return message["content"]

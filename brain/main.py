@@ -52,75 +52,129 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.info("Start command received")
     await update.message.reply_text("👋 WPMaster AI is connected and listening!")
 
-async def generate_ai_content(prompt: str):
-    """Call OpenAI to generate a professional blog post."""
+# --- Agentic Tools ---
+async def wp_tool_executor(tool_name: str, params: dict):
+    """Bridge between OpenAI Tool Calls and WP Gateway."""
+    logger.info(f"Executing Tool: {tool_name} with params: {params}")
+    return await call_wp_tool(tool_name, params)
+
+# Tool Definitions for OpenAI
+TOOLS_SCHEMA = [
+    {
+        "type": "function",
+        "function": {
+            "name": "manage_posts",
+            "description": "Create, edit, or list WordPress posts.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "action": {"type": "string", "enum": ["create", "edit", "list", "delete"]},
+                    "title": {"type": "string"},
+                    "content": {"type": "string"},
+                    "post_id": {"type": "integer"}
+                },
+                "required": ["action"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "manage_pages",
+            "description": "Create or edit WordPress pages.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "action": {"type": "string", "enum": ["create", "edit", "list"]},
+                    "title": {"type": "string"},
+                    "content": {"type": "string"}
+                },
+                "required": ["action"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "site_info",
+            "description": "Get technical info about the WordPress site (version, plugins, status).",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "detail": {"type": "string", "enum": ["basic", "full", "health"]}
+                }
+            }
+        }
+    }
+]
+
+async def run_agent_loop(user_msg: str, chat_history: list):
+    """The core thinking loop of the WPMaster AI Agent."""
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        return {
-            "title": "Draft: " + (prompt[:20] + "..."),
-            "content": f"<p>AI Key Missing! Please add OPENAI_API_KEY to Render.</p><p>Request: {prompt}</p>"
-        }
+        return "❌ Missing OPENAI_API_KEY in Render environment!"
+
+    url = "https://api.openai.com/v1/chat/completions"
+    headers = {"Authorization": f"Bearer {api_key}"}
     
+    messages = [
+        {"role": "system", "content": "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools. If you need to create a post, use manage_posts. If you need site info, use site_info. Always be professional and helpful."},
+        *chat_history,
+        {"role": "user", "content": user_msg}
+    ]
+
     try:
-        # Use simple requests for OpenAI to avoid adding more libs for now
-        url = "https://api.openai.com/v1/chat/completions"
-        headers = {"Authorization": f"Bearer {api_key}"}
-        payload = {
+        # Step 1: Initial call to AI
+        response = requests.post(url, json={
             "model": "gpt-4o",
-            "messages": [
-                {"role": "system", "content": "You are a professional WordPress content creator. Generate a blog post title and HTML content based on the user's request. Return it as a JSON object with 'title' and 'content' keys."},
-                {"role": "user", "content": prompt}
-            ],
-            "response_format": { "type": "json_object" }
-        }
+            "messages": messages,
+            "tools": TOOLS_SCHEMA,
+            "tool_choice": "auto"
+        }, headers=headers, timeout=60).json()
+
+        message = response['choices'][0]['message']
         
-        response = requests.post(url, json=payload, headers=headers, timeout=60)
-        result = response.json()
-        import json
-        ai_data = json.loads(result['choices'][0]['message']['content'])
-        return ai_data
+        # Step 2: Handle Tool Calls
+        if message.get("tool_calls"):
+            for tool_call in message["tool_calls"]:
+                tool_name = tool_call["function"]["name"]
+                import json
+                tool_args = json.loads(tool_call["function"]["arguments"])
+                
+                # Execute tool on WP
+                result = await wp_tool_executor(tool_name, tool_args)
+                
+                # Add tool result to conversation
+                messages.append(message)
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": tool_call["id"],
+                    "content": json.dumps(result)
+                })
+
+            # Step 3: Final response from AI
+            final_response = requests.post(url, json={
+                "model": "gpt-4o",
+                "messages": messages
+            }, headers=headers, timeout=60).json()
+            
+            return final_response['choices'][0]['message']['content']
+        
+        return message["content"]
+
     except Exception as e:
-        logger.error(f"AI Generation Error: {e}")
-        return {"title": "Error Generating Content", "content": f"<p>Error: {str(e)}</p>"}
+        logger.error(f"Agent Loop Error: {e}")
+        return f"❌ Agent Error: {str(e)}"
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_msg = update.message.text
-    logger.info(f"Message received: {user_msg}")
+    status_msg = await update.message.reply_text("🤔 WPMaster AI is thinking...")
     
-    status_msg = await update.message.reply_text("🤖 WPMaster AI is thinking and writing...")
+    # Run the Agentic Loop
+    # (Simplified history for now — can be expanded to a database later)
+    ai_reply = await run_agent_loop(user_msg, [])
     
-    # 1. Generate AI Content
-    ai_content = await generate_ai_content(user_msg)
-    
-    # 2. WP Gateway call
-    wp_result = await call_wp_tool("manage_posts", {
-        "action": "create",
-        "title": ai_content.get("title", "Untitled AI Post"),
-        "content": ai_content.get("content", "")
-    })
-    
-    logger.info(f"WP Result received: {wp_result}")
-    
-    if not wp_result or "error" in wp_result:
-        error_detail = wp_result.get("error", "Unknown Error") if wp_result else "No response from WP"
-        await status_msg.edit_text(f"❌ WP Error: {error_detail}\n\nHint: Check your WP_USERNAME and WP_APP_PASSWORD in Render!")
-        return
-
-    if "post_id" not in wp_result:
-        await status_msg.edit_text(f"❌ WP Response Missing ID: {wp_result}")
-        return
-
-    # 3. Send success message with public preview link
-    public_url = wp_result.get("url", "").replace("http://wpmastertest.local", os.getenv("WP_URL").replace("/wp-json/clawwp/v1", ""))
-    
-    keyboard = [[InlineKeyboardButton("🚀 Publish", callback_data=f"publish_{post_id}")]]
-    
-    await status_msg.delete()
-    await update.message.reply_text(
-        f"✅ **Draft Created!** (ID: {post_id})\n🔗 **Preview:** {public_url}",
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode="Markdown"
-    )
+    await status_msg.edit_text(ai_reply, parse_mode="Markdown")
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query

@@ -125,12 +125,20 @@ async def run_agent_loop(user_msg: str, chat_history: list):
 
     try:
         # Step 1: Initial call to AI
-        response = requests.post(url, json={
+        resp_obj = requests.post(url, json={
             "model": "gpt-4o",
             "messages": messages,
             "tools": TOOLS_SCHEMA,
             "tool_choice": "auto"
-        }, headers=headers, timeout=60).json()
+        }, headers=headers, timeout=60)
+        
+        response = resp_obj.json()
+        
+        if "error" in response:
+            return f"❌ OpenAI Error: {response['error']['message']}"
+            
+        if "choices" not in response:
+            return f"❌ OpenAI Unexpected Response: {response}"
 
         message = response['choices'][0]['message']
         

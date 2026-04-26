@@ -20,6 +20,7 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 WP_URL = os.getenv("WP_URL")
 WP_USERNAME = os.getenv("WP_USERNAME")
 WP_APP_PASSWORD = os.getenv("WP_APP_PASSWORD")
+CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-opus-4-1-20250805")  # Default to latest Opus 4.1
 
 app = FastAPI(title="WPMaster AI Brain")
 
@@ -135,7 +136,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         url = "https://api.anthropic.com/v1/messages"
         headers = {
             "x-api-key": anthropic_key,
-            "anthropic-version": "2023-06-01",
+            "anthropic-version": "2024-06-15",
             "content-type": "application/json"
         }
         
@@ -151,7 +152,10 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         system_str = "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools. Always be professional and helpful."
         clean_messages = [m for m in messages if m["role"] != "system"]
 
-        def call_claude(msgs, tools=None, model_name="claude-3-5-sonnet-20241022"):
+        def call_claude(msgs, tools=None, model_name=None):
+            if model_name is None:
+                model_name = CLAUDE_MODEL
+            logger.info(f"Calling Claude with model: {model_name}")
             payload = {
                 "model": model_name,
                 "max_tokens": 4096,
@@ -162,7 +166,9 @@ async def run_agent_loop(user_msg: str, chat_history: list):
                 payload["tools"] = tools
             
             resp = requests.post(url, json=payload, headers=headers, timeout=60)
+            logger.info(f"Claude API Response Status: {resp.status_code}")
             if resp.status_code != 200:
+                logger.error(f"Claude API Error Response: {resp.text}")
                 return {"error": {"message": f"HTTP {resp.status_code}: {resp.text}"}}
             return resp.json()
 

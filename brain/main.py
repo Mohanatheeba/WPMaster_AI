@@ -137,7 +137,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
             "content-type": "application/json"
         }
         
-        # Convert TOOLS_SCHEMA to Anthropic format (they use 'input_schema' instead of 'parameters')
+        # Convert TOOLS_SCHEMA to Anthropic's strict format
         anthropic_tools = []
         for t in TOOLS_SCHEMA:
             anthropic_tools.append({
@@ -146,33 +146,35 @@ async def run_agent_loop(user_msg: str, chat_history: list):
                 "input_schema": t["function"]["parameters"]
             })
 
-        system_prompt = "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools."
-        
-        def call_claude(msgs, tools=None, model="claude-3-5-sonnet-20240620"):
+        # Anthropic requires 'system' as a separate string, and messages must NOT have a system role.
+        system_str = "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools. Always be professional and helpful."
+        clean_messages = [m for m in messages if m["role"] != "system"]
+
+        def call_claude(msgs, tools=None, model_name="claude-3-5-sonnet-20240620"):
             payload = {
-                "model": model,
+                "model": model_name,
                 "max_tokens": 4096,
-                "system": system_prompt,
+                "system": system_str,
                 "messages": msgs
             }
             if tools:
                 payload["tools"] = tools
-            return requests.post(url, json=payload, headers=headers, timeout=60).json()
+            
+            resp = requests.post(url, json=payload, headers=headers, timeout=60)
+            return resp.json()
 
         try:
-            # Try Premium Model first (Sonnet)
-            response = await loop.run_in_executor(None, call_claude, messages[1:])
+            # Try Premium Model
+            response = await loop.run_in_executor(None, call_claude, clean_messages, anthropic_tools)
             
-            # If ANY error happens, immediately try the cheaper model (Haiku)
+            # If it fails, report the FULL error for troubleshooting
             if "error" in response:
-                logger.warning(f"Premium model failed: {response['error'].get('message')}. Trying Haiku...")
-                response = await loop.run_in_executor(None, call_claude, messages[1:], None, "claude-3-haiku-20240307")
-
-            if "error" in response:
-                return f"❌ Claude Final Error: {response['error']['message']}"
+                error_data = response["error"]
+                return f"❌ Claude Error Type: {error_data.get('type')}\nMessage: {error_data.get('message')}\n(Model tried: claude-3-5-sonnet-20240620)"
 
             # Handle Tool Use (Anthropic)
             if response.get("stop_reason") == "tool_use":
+                # ... same tool handling logic ...
                 for content in response["content"]:
                     if content["type"] == "tool_use":
                         tool_name = content["name"]

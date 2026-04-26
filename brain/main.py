@@ -129,7 +129,8 @@ async def run_agent_loop(user_msg: str, chat_history: list):
 
     # --- ANTHROPIC CLAUDE PATH ---
     if anthropic_key:
-        logger.info("Using Anthropic Claude Provider")
+        anthropic_key = anthropic_key.strip() # Remove any hidden spaces
+        logger.info(f"Using Anthropic Claude Opus Provider (Key Length: {len(anthropic_key)})")
         url = "https://api.anthropic.com/v1/messages"
         headers = {
             "x-api-key": anthropic_key,
@@ -146,11 +147,10 @@ async def run_agent_loop(user_msg: str, chat_history: list):
                 "input_schema": t["function"]["parameters"]
             })
 
-        # Anthropic requires 'system' as a separate string, and messages must NOT have a system role.
         system_str = "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools. Always be professional and helpful."
         clean_messages = [m for m in messages if m["role"] != "system"]
 
-        def call_claude(msgs, tools=None, model_name="claude-3-haiku-20240307"):
+        def call_claude(msgs, tools=None, model_name="claude-3-opus-20240229"):
             payload = {
                 "model": model_name,
                 "max_tokens": 4096,
@@ -161,15 +161,17 @@ async def run_agent_loop(user_msg: str, chat_history: list):
                 payload["tools"] = tools
             
             resp = requests.post(url, json=payload, headers=headers, timeout=60)
+            if resp.status_code != 200:
+                return {"error": {"message": f"HTTP {resp.status_code}: {resp.text}"}}
             return resp.json()
 
         try:
-            # Use Haiku as the primary model for maximum stability
+            # Use Opus as the powerhouse model
             response = await loop.run_in_executor(None, call_claude, clean_messages, anthropic_tools)
             
             if "error" in response:
                 error_data = response["error"]
-                return f"❌ Claude Error: {error_data.get('message')}\n(Model: Haiku)"
+                return f"❌ Claude Opus Error: {error_data.get('message')}"
 
             # Handle Tool Use (Anthropic)
             if response.get("stop_reason") == "tool_use":

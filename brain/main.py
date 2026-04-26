@@ -2,6 +2,7 @@ import os
 import requests
 import asyncio
 import logging
+import json
 from fastapi import FastAPI, Request, Response
 from telegram import Bot, Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler

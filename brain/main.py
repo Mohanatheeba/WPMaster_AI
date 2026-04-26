@@ -119,6 +119,13 @@ async def run_agent_loop(user_msg: str, chat_history: list):
     import asyncio
     loop = asyncio.get_event_loop()
 
+    # Define the universal messages structure
+    messages = [
+        {"role": "system", "content": "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools."},
+        *chat_history,
+        {"role": "user", "content": user_msg}
+    ]
+
     # --- ANTHROPIC CLAUDE PATH ---
     if anthropic_key:
         logger.info("Using Anthropic Claude Provider")

@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
-# Version: 1.0.5 - Forced Redeploy
+# VERSION: 1.0.9 - TRIPLE FORCE RESET
 
 load_dotenv()
 

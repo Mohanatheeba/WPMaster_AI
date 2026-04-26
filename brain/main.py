@@ -239,7 +239,6 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         if message.get("tool_calls"):
             for tool_call in message["tool_calls"]:
                 tool_name = tool_call["function"]["name"]
-                import json
                 tool_args = json.loads(tool_call["function"]["arguments"])
                 
                 # Execute tool on WP

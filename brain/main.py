@@ -124,7 +124,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
 
     # Define the universal messages structure
     messages = [
-        {"role": "system", "content": "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools."},
+        {"role": "system", "content": "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools. SAFETY RULE: Never update a post or page's content unless you have already fetched the existing content first. Do not send technical status strings as content. If you are just publishing, keep the original content exactly as it is."},
         *chat_history,
         {"role": "user", "content": user_msg}
     ]

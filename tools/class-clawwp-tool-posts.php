@@ -159,9 +159,9 @@ class ClawWP_Tool_Posts extends ClawWP_Tool {
 
         $update = array( 'ID' => $params['post_id'] );
 
-        if ( isset( $params['title'] ) )   $update['post_title']   = sanitize_text_field( $params['title'] );
-        if ( isset( $params['content'] ) ) $update['post_content'] = wp_kses_post( $params['content'] );
-        if ( isset( $params['excerpt'] ) ) $update['post_excerpt'] = sanitize_text_field( $params['excerpt'] );
+        if ( isset( $params['title'] ) && ! empty( $params['title'] ) )     $update['post_title']   = sanitize_text_field( $params['title'] );
+        if ( isset( $params['content'] ) && ! empty( $params['content'] ) ) $update['post_content'] = wp_kses_post( $params['content'] );
+        if ( isset( $params['excerpt'] ) && ! empty( $params['excerpt'] ) ) $update['post_excerpt'] = sanitize_text_field( $params['excerpt'] );
         if ( isset( $params['status'] ) ) {
             $update['post_status'] = in_array( $params['status'], self::$allowed_statuses, true ) ? $params['status'] : $post->post_status;
         }

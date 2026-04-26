@@ -150,7 +150,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         system_str = "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools. Always be professional and helpful."
         clean_messages = [m for m in messages if m["role"] != "system"]
 
-        def call_claude(msgs, tools=None, model_name="claude-3-5-sonnet-20240620"):
+        def call_claude(msgs, tools=None, model_name="claude-3-haiku-20240307"):
             payload = {
                 "model": model_name,
                 "max_tokens": 4096,
@@ -164,13 +164,12 @@ async def run_agent_loop(user_msg: str, chat_history: list):
             return resp.json()
 
         try:
-            # Try Premium Model
+            # Use Haiku as the primary model for maximum stability
             response = await loop.run_in_executor(None, call_claude, clean_messages, anthropic_tools)
             
-            # If it fails, report the FULL error for troubleshooting
             if "error" in response:
                 error_data = response["error"]
-                return f"❌ Claude Error Type: {error_data.get('type')}\nMessage: {error_data.get('message')}\n(Model tried: claude-3-5-sonnet-20240620)"
+                return f"❌ Claude Error: {error_data.get('message')}\n(Model: Haiku)"
 
             # Handle Tool Use (Anthropic)
             if response.get("stop_reason") == "tool_use":

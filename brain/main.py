@@ -281,7 +281,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # (Simplified history for now — can be expanded to a database later)
     ai_reply = await run_agent_loop(user_msg, [])
     
-    await status_msg.edit_text(ai_reply, parse_mode="Markdown")
+    # Remove Markdown parse_mode to prevent 'Can't parse entities' crashes
+    await status_msg.edit_text(ai_reply)
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query

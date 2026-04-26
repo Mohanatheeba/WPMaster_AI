@@ -113,36 +113,8 @@ class ClawWP_Tools {
                 $this->register( new $class() );
             }
         }
-
-        // Register MCP tools from connected servers.
-        // Built-in servers (e.g. GuessMarket) are available to all users.
-        // Custom user-added MCP servers require Pro.
-        $this->register_mcp_tools();
     }
 
-    /**
-     * Register tools discovered from MCP servers.
-     */
-    private function register_mcp_tools() {
-        $registry = new ClawWP_MCP_Registry();
-        $is_pro   = ClawWP_License::is_pro();
-
-        foreach ( $registry->get_all_tools() as $server_id => $server_tools ) {
-            $server = $registry->get_server( $server_id );
-            if ( ! $server ) {
-                continue;
-            }
-
-            // Custom (non-built-in) MCP servers require Pro.
-            if ( ! $registry->is_builtin( $server_id ) && ! $is_pro ) {
-                continue;
-            }
-
-            foreach ( $server_tools as $tool_def ) {
-                $this->register( new ClawWP_MCP_Tool( $server, $tool_def ) );
-            }
-        }
-    }
 
     /**
      * Register a tool.

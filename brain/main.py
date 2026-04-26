@@ -151,7 +151,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         system_str = "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools. Always be professional and helpful."
         clean_messages = [m for m in messages if m["role"] != "system"]
 
-        def call_claude(msgs, tools=None, model_name="claude-3-5-sonnet-20240620"):
+        def call_claude(msgs, tools=None, model_name="claude-3-5-sonnet-20241022"):
             payload = {
                 "model": model_name,
                 "max_tokens": 4096,

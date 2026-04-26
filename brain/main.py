@@ -109,25 +109,91 @@ TOOLS_SCHEMA = [
 ]
 
 async def run_agent_loop(user_msg: str, chat_history: list):
-    """The core thinking loop of the WPMaster AI Agent."""
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        return "❌ Missing OPENAI_API_KEY in Render environment!"
-
-    url = "https://api.openai.com/v1/chat/completions"
-    headers = {"Authorization": f"Bearer {api_key}"}
+    """The core thinking loop of the WPMaster AI Agent (Supports OpenAI & Anthropic)."""
+    openai_key = os.getenv("OPENAI_API_KEY")
+    anthropic_key = os.getenv("ANTHROPIC_API_KEY")
     
-    messages = [
-        {"role": "system", "content": "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools. If you need to create a post, use manage_posts. If you need site info, use site_info. Always be professional and helpful."},
-        *chat_history,
-        {"role": "user", "content": user_msg}
-    ]
+    if not openai_key and not anthropic_key:
+        return "❌ Missing AI API Key! Please add OPENAI_API_KEY or ANTHROPIC_API_KEY to Render."
 
-    try:
-        # Step 1: Initial call to AI
-        import asyncio
-        loop = asyncio.get_event_loop()
+    import asyncio
+    loop = asyncio.get_event_loop()
+
+    # --- ANTHROPIC CLAUDE PATH ---
+    if anthropic_key:
+        logger.info("Using Anthropic Claude Provider")
+        url = "https://api.anthropic.com/v1/messages"
+        headers = {
+            "x-api-key": anthropic_key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json"
+        }
         
+        # Convert TOOLS_SCHEMA to Anthropic format (they use 'input_schema' instead of 'parameters')
+        anthropic_tools = []
+        for t in TOOLS_SCHEMA:
+            anthropic_tools.append({
+                "name": t["function"]["name"],
+                "description": t["function"]["description"],
+                "input_schema": t["function"]["parameters"]
+            })
+
+        system_prompt = "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools."
+        
+        def call_claude(msgs, tools=None):
+            payload = {
+                "model": "claude-3-5-sonnet-20240620",
+                "max_tokens": 4096,
+                "system": system_prompt,
+                "messages": msgs
+            }
+            if tools:
+                payload["tools"] = tools
+            return requests.post(url, json=payload, headers=headers, timeout=60).json()
+
+        try:
+            response = await loop.run_in_executor(None, call_claude, messages[1:]) # Skip system role for Claude
+            
+            if "error" in response:
+                return f"❌ Claude Error: {response['error']['message']}"
+
+            # Handle Tool Use (Anthropic)
+            if response.get("stop_reason") == "tool_use":
+                for content in response["content"]:
+                    if content["type"] == "tool_use":
+                        tool_name = content["name"]
+                        tool_args = content["input"]
+                        tool_use_id = content["id"]
+                        
+                        result = await wp_tool_executor(tool_name, tool_args)
+                        
+                        # Follow up
+                        follow_up_msgs = [
+                            *messages[1:],
+                            {"role": "assistant", "content": response["content"]},
+                            {
+                                "role": "user",
+                                "content": [
+                                    {
+                                        "type": "tool_result",
+                                        "tool_use_id": tool_use_id,
+                                        "content": json.dumps(result)
+                                    }
+                                ]
+                            }
+                        ]
+                        final_resp = await loop.run_in_executor(None, call_claude, follow_up_msgs)
+                        return final_resp["content"][0]["text"]
+            
+            return response["content"][0]["text"]
+        except Exception as e:
+            return f"❌ Claude Agent Error: {str(e)}"
+
+    # --- OPENAI PATH ---
+    url = "https://api.openai.com/v1/chat/completions"
+    headers = {"Authorization": f"Bearer {openai_key}"}
+    
+    try:
         def call_openai(msgs, tools=None):
             payload = {"model": "gpt-4o", "messages": msgs}
             if tools:

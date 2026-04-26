@@ -160,15 +160,16 @@ async def run_agent_loop(user_msg: str, chat_history: list):
             return requests.post(url, json=payload, headers=headers, timeout=60).json()
 
         try:
+            # Try Premium Model first (Sonnet)
             response = await loop.run_in_executor(None, call_claude, messages[1:])
             
-            # Auto-Fallback to Haiku if Sonnet fails
-            if "error" in response and "claude-3-5-sonnet" in response["error"].get("message", ""):
-                logger.warning("Sonnet unavailable, falling back to Haiku")
+            # If ANY error happens, immediately try the cheaper model (Haiku)
+            if "error" in response:
+                logger.warning(f"Premium model failed: {response['error'].get('message')}. Trying Haiku...")
                 response = await loop.run_in_executor(None, call_claude, messages[1:], None, "claude-3-haiku-20240307")
 
             if "error" in response:
-                return f"❌ Claude Error: {response['error']['message']}"
+                return f"❌ Claude Final Error: {response['error']['message']}"
 
             # Handle Tool Use (Anthropic)
             if response.get("stop_reason") == "tool_use":

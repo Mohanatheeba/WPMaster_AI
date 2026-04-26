@@ -148,9 +148,9 @@ async def run_agent_loop(user_msg: str, chat_history: list):
 
         system_prompt = "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools."
         
-        def call_claude(msgs, tools=None):
+        def call_claude(msgs, tools=None, model="claude-3-5-sonnet-20240620"):
             payload = {
-                "model": "claude-3-5-sonnet-20240620",
+                "model": model,
                 "max_tokens": 4096,
                 "system": system_prompt,
                 "messages": msgs
@@ -160,8 +160,13 @@ async def run_agent_loop(user_msg: str, chat_history: list):
             return requests.post(url, json=payload, headers=headers, timeout=60).json()
 
         try:
-            response = await loop.run_in_executor(None, call_claude, messages[1:]) # Skip system role for Claude
+            response = await loop.run_in_executor(None, call_claude, messages[1:])
             
+            # Auto-Fallback to Haiku if Sonnet fails
+            if "error" in response and "claude-3-5-sonnet" in response["error"].get("message", ""):
+                logger.warning("Sonnet unavailable, falling back to Haiku")
+                response = await loop.run_in_executor(None, call_claude, messages[1:], None, "claude-3-haiku-20240307")
+
             if "error" in response:
                 return f"❌ Claude Error: {response['error']['message']}"
 

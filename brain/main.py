@@ -136,7 +136,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         url = "https://api.anthropic.com/v1/messages"
         headers = {
             "x-api-key": anthropic_key,
-            "anthropic-version": "2024-06-01",
+            "anthropic-version": "2023-06-01",
             "content-type": "application/json"
         }
         

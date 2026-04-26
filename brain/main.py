@@ -173,43 +173,47 @@ async def run_agent_loop(user_msg: str, chat_history: list):
             return resp.json()
 
         try:
-            # Use Opus as the powerhouse model
-            response = await loop.run_in_executor(None, call_claude, clean_messages, anthropic_tools)
-            
-            if "error" in response:
-                error_data = response["error"]
-                return f"❌ Claude Opus Error: {error_data.get('message')}"
+            # --- MULTI-TURN THINKING LOOP ---
+            current_msgs = clean_messages
+            for _ in range(10): # Allow up to 10 steps to finish a task
+                response = await loop.run_in_executor(None, call_claude, current_msgs, anthropic_tools)
+                
+                if "error" in response:
+                    error_data = response["error"]
+                    return f"❌ Claude Error: {error_data.get('message')}"
 
-            # Handle Tool Use (Anthropic)
-            if response.get("stop_reason") == "tool_use":
-                # ... same tool handling logic ...
-                for content in response["content"]:
+                # Handle Text & Tool Use
+                assistant_content = response["content"]
+                current_msgs.append({"role": "assistant", "content": assistant_content})
+
+                if response.get("stop_reason") != "tool_use":
+                    # AI is finished thinking, return final text
+                    return assistant_content[0]["text"]
+
+                # Process all tool calls in this turn
+                for content in assistant_content:
                     if content["type"] == "tool_use":
                         tool_name = content["name"]
                         tool_args = content["input"]
                         tool_use_id = content["id"]
                         
+                        logger.info(f"Agent wants to use: {tool_name}")
                         result = await wp_tool_executor(tool_name, tool_args)
                         
-                        # Follow up
-                        follow_up_msgs = [
-                            *messages[1:],
-                            {"role": "assistant", "content": response["content"]},
-                            {
-                                "role": "user",
-                                "content": [
-                                    {
-                                        "type": "tool_result",
-                                        "tool_use_id": tool_use_id,
-                                        "content": json.dumps(result)
-                                    }
-                                ]
-                            }
-                        ]
-                        final_resp = await loop.run_in_executor(None, call_claude, follow_up_msgs)
-                        return final_resp["content"][0]["text"]
-            
-            return response["content"][0]["text"]
+                        current_msgs.append({
+                            "role": "user",
+                            "content": [
+                                {
+                                    "type": "tool_result",
+                                    "tool_use_id": tool_use_id,
+                                    "content": json.dumps(result)
+                                }
+                            ]
+                        })
+                # Loop continues to next turn with tool results...
+
+            return "⚠️ Agent exceeded maximum thinking steps (10). Please be more specific."
+
         except Exception as e:
             return f"❌ Claude Agent Error: {str(e)}"
 

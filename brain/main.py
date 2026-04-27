@@ -147,7 +147,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         try:
             for _ in range(10): # Agentic Loop
                 payload = {
-                    "model": "anthropic/claude-3.5-sonnet",
+                    "model": "anthropic/claude-3-5-sonnet",
                     "messages": current_msgs,
                     "tools": TOOLS_SCHEMA,
                     "tool_choice": "auto"

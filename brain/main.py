@@ -115,9 +115,10 @@ async def run_agent_loop(user_msg: str, chat_history: list):
     """The core thinking loop of the WPMaster AI Agent (Supports OpenAI & Anthropic)."""
     openai_key = os.getenv("OPENAI_API_KEY")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
     
-    if not openai_key and not anthropic_key:
-        return "❌ Missing AI API Key! Please add OPENAI_API_KEY or ANTHROPIC_API_KEY to Render."
+    if not openai_key and not anthropic_key and not openrouter_key:
+        return "❌ Missing AI API Key! Please add OPENROUTER_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY to your Render Environment Variables."
 
     import asyncio
     loop = asyncio.get_event_loop()

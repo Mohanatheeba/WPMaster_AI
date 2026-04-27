@@ -129,93 +129,65 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         {"role": "user", "content": user_msg}
     ]
 
-    # --- ANTHROPIC CLAUDE PATH ---
-    if anthropic_key:
-        anthropic_key = anthropic_key.strip() # Remove any hidden spaces
-        logger.info(f"Using Anthropic Claude Opus Provider (Key Length: {len(anthropic_key)})")
-        url = "https://api.anthropic.com/v1/messages"
+    # --- OPENROUTER / QWEN CODER PATH ---
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    if openrouter_key:
+        openrouter_key = openrouter_key.strip()
+        logger.info(f"Using OpenRouter Qwen Coder Provider")
+        url = "https://openrouter.ai/api/v1/chat/completions"
         headers = {
-            "x-api-key": anthropic_key,
-            "anthropic-version": "2023-06-01",
-            "content-type": "application/json"
+            "Authorization": f"Bearer {openrouter_key}",
+            "HTTP-Referer": "https://wpmaster.ai", # Optional
+            "X-Title": "WPMaster AI",
+            "Content-Type": "application/json"
         }
         
-        # Convert TOOLS_SCHEMA to Anthropic's strict format
-        anthropic_tools = []
-        for t in TOOLS_SCHEMA:
-            anthropic_tools.append({
-                "name": t["function"]["name"],
-                "description": t["function"]["description"],
-                "input_schema": t["function"]["parameters"]
-            })
-
-        system_str = "You are WPMaster AI, a powerful WordPress administrator assistant. You have direct access to the user's WordPress site via tools. Always be professional and helpful."
-        clean_messages = [m for m in messages if m["role"] != "system"]
-
-        def call_claude(msgs, tools=None, model_name=None):
-            if model_name is None:
-                model_name = CLAUDE_MODEL
-            logger.info(f"Calling Claude with model: {model_name}")
-            payload = {
-                "model": model_name,
-                "max_tokens": 4096,
-                "system": system_str,
-                "messages": msgs
-            }
-            if tools:
-                payload["tools"] = tools
-            
-            resp = requests.post(url, json=payload, headers=headers, timeout=60)
-            logger.info(f"Claude API Response Status: {resp.status_code}")
-            if resp.status_code != 200:
-                logger.error(f"Claude API Error Response: {resp.text}")
-                return {"error": {"message": f"HTTP {resp.status_code}: {resp.text}"}}
-            return resp.json()
-
+        current_msgs = messages
         try:
-            # --- MULTI-TURN THINKING LOOP ---
-            current_msgs = clean_messages
-            for _ in range(10): # Allow up to 10 steps to finish a task
-                response = await loop.run_in_executor(None, call_claude, current_msgs, anthropic_tools)
+            for _ in range(10): # Agentic Loop
+                payload = {
+                    "model": "qwen/qwen-2.5-coder-32b-instruct",
+                    "messages": current_msgs,
+                    "tools": TOOLS_SCHEMA,
+                    "tool_choice": "auto"
+                }
                 
-                if "error" in response:
-                    error_data = response["error"]
-                    return f"❌ Claude Error: {error_data.get('message')}"
+                resp = requests.post(url, json=payload, headers=headers, timeout=60)
+                if resp.status_code != 200:
+                    return f"❌ OpenRouter Error: {resp.status_code} - {resp.text}"
+                
+                response = resp.json()
+                choice = response["choices"][0]
+                message = choice["message"]
+                current_msgs.append(message)
 
-                # Handle Text & Tool Use
-                assistant_content = response["content"]
-                current_msgs.append({"role": "assistant", "content": assistant_content})
+                if choice["finish_reason"] != "tool_calls":
+                    return message["content"]
 
-                if response.get("stop_reason") != "tool_use":
-                    # AI is finished thinking, return final text
-                    return assistant_content[0]["text"]
-
-                # Process all tool calls in this turn
-                for content in assistant_content:
-                    if content["type"] == "tool_use":
-                        tool_name = content["name"]
-                        tool_args = content["input"]
-                        tool_use_id = content["id"]
+                # Process Tool Calls
+                if message.get("tool_calls"):
+                    for tool_call in message["tool_calls"]:
+                        tool_name = tool_call["function"]["name"]
+                        tool_args = json.loads(tool_call["function"]["arguments"])
+                        tool_call_id = tool_call["id"]
                         
-                        logger.info(f"Agent wants to use: {tool_name}")
+                        logger.info(f"Qwen wants to use: {tool_name}")
                         result = await wp_tool_executor(tool_name, tool_args)
                         
                         current_msgs.append({
-                            "role": "user",
-                            "content": [
-                                {
-                                    "type": "tool_result",
-                                    "tool_use_id": tool_use_id,
-                                    "content": json.dumps(result)
-                                }
-                            ]
+                            "role": "tool",
+                            "tool_call_id": tool_call_id,
+                            "name": tool_name,
+                            "content": json.dumps(result)
                         })
-                # Loop continues to next turn with tool results...
-
-            return "⚠️ Agent exceeded maximum thinking steps (10). Please be more specific."
-
+                else:
+                    # No tool calls but finish_reason was tool_calls? Fallback.
+                    return message["content"]
+            return "⚠️ Agent exceeded maximum steps."
         except Exception as e:
-            return f"❌ Claude Agent Error: {str(e)}"
+            return f"❌ Qwen Agent Error: {str(e)}"
+
+    # --- ANTHROPIC CLAUDE PATH (FALLBACK) ---
 
     # --- OPENAI PATH ---
     url = "https://api.openai.com/v1/chat/completions"

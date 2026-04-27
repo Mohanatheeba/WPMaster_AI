@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
-# VERSION: 1.1.2 - QWEN STABLE
+# VERSION: 1.1.5 - STABILITY RESET
 
 load_dotenv()
 
@@ -147,7 +147,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         try:
             for _ in range(10): # Agentic Loop
                 payload = {
-                    "model": "anthropic/claude-3-5-sonnet",
+                    "model": "openai/gpt-4o-mini",
                     "messages": current_msgs,
                     "tools": TOOLS_SCHEMA,
                     "tool_choice": "auto"

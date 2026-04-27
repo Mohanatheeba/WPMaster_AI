@@ -147,7 +147,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         try:
             for _ in range(10): # Agentic Loop
                 payload = {
-                    "model": "qwen/qwen-3-coder-next",
+                    "model": "qwen/qwen-2.5-coder-32b-instruct",
                     "messages": current_msgs,
                     "tools": TOOLS_SCHEMA,
                     "tool_choice": "auto"

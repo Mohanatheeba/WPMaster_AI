@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
-# VERSION: 1.1.8 - GPT-4O-MINI (TOOL SUPPORT FIX)
+# VERSION: 1.2.0 - DASHSCOPE NATIVE
 
 load_dotenv()
 
@@ -116,9 +116,10 @@ async def run_agent_loop(user_msg: str, chat_history: list):
     openai_key = os.getenv("OPENAI_API_KEY")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY")
     openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    dashscope_key = os.getenv("DASHSCOPE_API_KEY")
     
-    if not openai_key and not anthropic_key and not openrouter_key:
-        return "❌ Missing AI API Key! Please add OPENROUTER_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY to your Render Environment Variables."
+    if not openai_key and not anthropic_key and not openrouter_key and not dashscope_key:
+        return "❌ Missing AI API Key! Please add DASHSCOPE_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY to your Render Environment Variables."
 
     import asyncio
     loop = asyncio.get_event_loop()
@@ -130,7 +131,61 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         {"role": "user", "content": user_msg}
     ]
 
-    # --- OPENROUTER / QWEN CODER PATH ---
+    # --- DASHSCOPE NATIVE PATH (Alibaba Cloud) ---
+    if dashscope_key:
+        dashscope_key = dashscope_key.strip()
+        logger.info(f"Using Alibaba DashScope Provider (Qwen)")
+        url = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {dashscope_key}",
+            "Content-Type": "application/json"
+        }
+        
+        current_msgs = messages
+        try:
+            for _ in range(10): # Agentic Loop
+                payload = {
+                    "model": "qwen2.5-coder-32b-instruct",
+                    "messages": current_msgs,
+                    "tools": TOOLS_SCHEMA,
+                    "tool_choice": "auto"
+                }
+                
+                resp = requests.post(url, json=payload, headers=headers, timeout=60)
+                if resp.status_code != 200:
+                    return f"❌ DashScope Error: {resp.status_code} - {resp.text}"
+                
+                response = resp.json()
+                choice = response["choices"][0]
+                message = choice["message"]
+                current_msgs.append(message)
+
+                if choice["finish_reason"] != "tool_calls":
+                    return message["content"]
+
+                # Process Tool Calls
+                if message.get("tool_calls"):
+                    for tool_call in message["tool_calls"]:
+                        tool_name = tool_call["function"]["name"]
+                        tool_args = json.loads(tool_call["function"]["arguments"])
+                        tool_call_id = tool_call["id"]
+                        
+                        logger.info(f"Qwen wants to use: {tool_name}")
+                        result = await wp_tool_executor(tool_name, tool_args)
+                        
+                        current_msgs.append({
+                            "role": "tool",
+                            "tool_call_id": tool_call_id,
+                            "name": tool_name,
+                            "content": json.dumps(result)
+                        })
+                else:
+                    return message["content"]
+            return "⚠️ Agent exceeded maximum steps."
+        except Exception as e:
+            return f"❌ DashScope Agent Error: {str(e)}"
+
+    # --- OPENROUTER PATH ---
     openrouter_key = os.getenv("OPENROUTER_API_KEY")
     if openrouter_key:
         openrouter_key = openrouter_key.strip()

@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
-# VERSION: 1.2.0 - DASHSCOPE NATIVE
+# VERSION: 1.2.1 - QWEN PLUS
 
 load_dotenv()
 
@@ -145,7 +145,7 @@ async def run_agent_loop(user_msg: str, chat_history: list):
         try:
             for _ in range(10): # Agentic Loop
                 payload = {
-                    "model": "qwen2.5-coder-32b-instruct",
+                    "model": "qwen-plus",
                     "messages": current_msgs,
                     "tools": TOOLS_SCHEMA,
                     "tool_choice": "auto"
